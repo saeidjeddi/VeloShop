@@ -20,6 +20,7 @@ if User.objects.using("default").count() == 0:
     User.objects.db_manager("default").create_superuser(
         email="admin@example.com",
         username="admin",
+        phone="09120000000",
         password="admin"
     )
     print("Superuser created")
