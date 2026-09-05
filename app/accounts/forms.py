@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from .models import User
+from .models import UserModel
 
 
 
@@ -13,7 +13,7 @@ class UserCreationForm(forms.ModelForm):
     password2 = forms.CharField(label="Password confirmation", widget=forms.PasswordInput)
 
     class Meta:
-        model = User
+        model = UserModel
         fields = ["email", "username", "full_name", "phone", "is_active", "is_admin", "is_superuser"]
 
     def clean_password2(self):
@@ -35,5 +35,5 @@ class UserCreationForm(forms.ModelForm):
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
     class Meta:
-        model = User
+        model = UserModel
         fields = ["email", "password", "username", "full_name", "is_active", "is_admin"]

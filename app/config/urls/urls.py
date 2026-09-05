@@ -4,10 +4,21 @@ from django.urls import path, include
 from .v1 import urlpatterns  as v1_urlpatterns
 from config.settings import production
 from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('v1/', include(v1_urlpatterns)),
+]
+
+urlpatterns += [
+
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+
 ]
 
 

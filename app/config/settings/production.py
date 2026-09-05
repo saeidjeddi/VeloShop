@@ -26,7 +26,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 ROOT_URLCONF = 'config.urls.urls'
 
-AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "accounts.UserModel"
 
 LANGUAGE_CODE = 'fa-ir'
 

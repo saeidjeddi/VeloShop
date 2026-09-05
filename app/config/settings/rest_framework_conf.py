@@ -1,10 +1,9 @@
 import os
 from datetime import timedelta
 
-
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -15,9 +14,19 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/hour',
+        'user': '20/minute',
+    },
+
 
 }
-
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Velo Shop',

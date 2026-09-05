@@ -10,8 +10,11 @@ DJANGO_APPS = [
 
 EXTERNAL_APPS = [
 
-    "rest_framework",
-    "django_filters"
+    'rest_framework',
+    'django_filters',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'rest_framework_simplejwt',
 
 ]
 

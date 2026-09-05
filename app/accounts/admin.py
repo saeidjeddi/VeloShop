@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import UserCreationForm, UserChangeForm
-from .models import User, UserProfile, UserOTPModel
+from .models import UserModel, UserProfileModel, UserOTPModel
 
 admin.site.site_header = 'پنل مدیریت'
 admin.site.site_title = 'پنل مدیریت فروشگاه'
@@ -10,7 +10,7 @@ admin.site.index_title = 'به پنل مدیریت  خوش آمدید'
 
 
 class UserProfileInline(admin.TabularInline):
-    model = UserProfile
+    model = UserProfileModel
     extra = 1
 
 
@@ -64,6 +64,6 @@ class UserAdmin(BaseUserAdmin):
 
 # admin.site.register(UserProfile, UserProfileAdmin)
 
-admin.site.register(User, UserAdmin)
+admin.site.register(UserModel, UserAdmin)
 admin.site.register(UserOTPModel)
 admin.site.unregister(Group)

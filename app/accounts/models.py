@@ -6,7 +6,7 @@ from .manager import UserManager
 
 
 
-class User(AbstractBaseUser):
+class UserModel(AbstractBaseUser):
     email = models.EmailField(verbose_name="ایمیل", max_length=255, unique=True,)
     username = models.CharField(max_length=255, unique=True, verbose_name="نام کاربری")
     phone = models.CharField(max_length=11, unique=True, verbose_name='تلفن همراه')
@@ -39,8 +39,8 @@ class User(AbstractBaseUser):
 
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+class UserProfileModel(models.Model):
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(max_length=255, null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     is_verified = models.BooleanField(default=False, verbose_name='تایید شده')
@@ -70,9 +70,9 @@ class UserProfile(models.Model):
 
 
 class UserOTPModel(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='otp')
-    otp_code = models.PositiveBigIntegerField(unique=True, verbose_name='کد تایید')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='otp')
+    otp_code = models.PositiveBigIntegerField(verbose_name='کد تایید')
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='تاریخ ایجاد')
 
     def __str__(self):
         return self.user.username
@@ -107,14 +107,14 @@ class RegisterUserOTPModel(models.Model):
 
 
 
-class PasswordResetOTP(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=4, unique=True)
+class ForgotPasswordResetOTPModel(models.Model):
+    user = models.OneToOneField(UserModel, on_delete=models.CASCADE, related_name='reset_password')
+    code = models.CharField(max_length=4)
     reset_token = models.UUIDField(null=True, blank=True, unique=True)
-    created_at = models.DateTimeField(auto_now=True)
-    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now=True, verbose_name='تاریخ ایجاد')
 
-    def expired(self):
+
+    def expired_otp(self):
         return timezone.now() > self.created_at + timezone.timedelta(minutes=2)
 
     def __str__(self):
