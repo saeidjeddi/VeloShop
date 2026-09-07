@@ -1,9 +1,13 @@
 import os
 from .rest_framework_conf import *
+from .cache_conf import *
+
 from .db_conf import DATABASES
 from .meddleware_conf import MIDDLEWARE
 from .apps_conf import INSTALLED_APPS
 from .email_conf import MAILERS
+
+
 
 from .paths import BASE_DIR
 
@@ -43,12 +47,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR.parent / 'volumes' / 'media'
 
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": os.environ["REDIS_URL"],
-    }
-}
+
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True

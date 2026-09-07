@@ -5,6 +5,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('products/', include('products.urls')),
+    path('categories/', include('categories.urls')),
 
 ]
 

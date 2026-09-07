@@ -6,6 +6,7 @@ from categories.models import ProductsCategoryModel
 
 class ProductModel(models.Model):
     category = models.ManyToManyField(ProductsCategoryModel, related_name="products")
+    image = models.ImageField(upload_to="products/images/")
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     description = models.CharField(max_length=255, null=True, blank=True)
@@ -34,7 +35,7 @@ class ProductModel(models.Model):
 
 class ProductImageModel(models.Model):
     product = models.ForeignKey(ProductModel, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to="products/images/")
+    image_slider = models.ImageField(upload_to="products/images/")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

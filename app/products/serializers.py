@@ -7,11 +7,13 @@ from .models import (
     ProductAudioModel,
 )
 
+from categories.serializers import ProductsCategorySerializer
+
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImageModel
-        fields = ("id", "image")
+        fields = ("id", "image_slider")
 
 class ProductVideoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,18 +26,42 @@ class ProductAudioSerializer(serializers.ModelSerializer):
         model = ProductAudioModel
         fields = ("id", "audio")
 
+class ProductListSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
 
-class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductModel
+        fields = ['id', 'title','image', 'slug', 'description_short', 'price', 'is_available']
+
+    def get_image(self, obj):
+        if not obj.image:
+            return None
+
+        request = self.context.get('request')
+
+        if request:
+            return request.build_absolute_uri(obj.image.url)
+
+        return obj.image.url
+
+
+
+
+
+
+class ProductDetailSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     videos = ProductVideoSerializer(many=True, read_only=True)
     audios = ProductAudioSerializer(many=True, read_only=True)
+    categories = ProductsCategorySerializer(many=True, read_only=True, source="category",)
 
     class Meta:
         model = ProductModel
         fields = [
             "id",
-            "category",
+            "categories",
             "title",
+            "image",
             "slug",
             "description",
             "description_short",
