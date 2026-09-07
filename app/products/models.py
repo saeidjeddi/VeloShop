@@ -8,11 +8,11 @@ class ProductModel(models.Model):
     category = models.ManyToManyField(ProductsCategoryModel, related_name="products")
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    description = models.TextField()
-    description_short = models.TextField(blank=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    description_short = models.TextField(blank=True, null=True)
     price = models.PositiveBigIntegerField(default=0)
     quantity = models.PositiveIntegerField(default=0)
-    discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(100)])
+    # discount = models.PositiveSmallIntegerField(default=0, validators=[MaxValueValidator(100)])
     is_active = models.BooleanField(default=True)
     is_available = models.BooleanField(default=True)
     is_special = models.BooleanField(default=False)
@@ -24,13 +24,7 @@ class ProductModel(models.Model):
     class Meta:
         db_table = "products"
         indexes = [
-            models.Index(fields=["title"]),
-            models.Index(fields=["slug"]),
-            models.Index(fields=["discount"]),
-            models.Index(fields=["is_active", "is_available"]),
-            models.Index(fields=["is_special",]),
-            models.Index(fields=["most_viewed",]),
-            models.Index(fields=["sales",]),
+            models.Index(fields=["title", "slug", "is_active", "is_available", "is_special", "most_viewed", "sales", "created_at"]),
         ]
         ordering = ["-created_at"]
 

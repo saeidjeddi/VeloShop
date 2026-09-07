@@ -12,6 +12,12 @@ class DatabaseRouter:
         if model._meta.app_label in self.primary_apps:
             return "default"
 
+        if hints.get("instance") is not None:
+            instance = hints["instance"]
+
+            if instance._state.db == "default":
+                return "default"
+
         return "replica"
 
     def db_for_write(self, model, **hints):

@@ -114,6 +114,7 @@ class ForgotPasswordResetOTPModel(models.Model):
     created_at = models.DateTimeField(auto_now=True, verbose_name='تاریخ ایجاد')
 
 
+
     def expired_otp(self):
         return timezone.now() > self.created_at + timezone.timedelta(minutes=2)
 

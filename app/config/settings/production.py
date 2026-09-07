@@ -17,9 +17,9 @@ DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
 
-DATABASE_ROUTERS = [
-    "config.settings.router.DatabaseRouter",
-]
+# DATABASE_ROUTERS = [
+#     "config.settings.router.DatabaseRouter",
+# ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
