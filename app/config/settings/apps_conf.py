@@ -23,6 +23,8 @@ LOCAL_APPS = [
     'accounts.apps.AccountsConfig',
     'products.apps.ProductsConfig',
     'categories.apps.CategoriesConfig',
+    'cart.apps.CartConfig',
+    'coupon.apps.CouponConfig'
 
 ]
 
