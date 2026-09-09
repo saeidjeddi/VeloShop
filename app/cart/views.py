@@ -18,17 +18,33 @@ class CartProductItemView(APIView):
         cart, created  = CartProductModel.objects.select_related("user").get_or_create(user=request.user)
         items = list(cart.cart_items.select_related("product"))
         serializer = CartProductItemSerializer(items, many=True, context={'request': request})
+
+
+        coupon = cart.coupon
+        discount_percent = 0
+
+        if coupon and not coupon.is_valid:
+            cart.coupon = None
+            cart.save(update_fields=["coupon", "updated"])
+            coupon = None
+
+        if coupon and coupon.is_valid:
+            discount_percent = coupon.discount
+
         total_price = sum(item.product.price for item in items)
 
+        discount_amount = total_price * discount_percent // 100
+        amount_payable = total_price - discount_amount
 
         return Response({
-            'message' :'سبد خرید کاربر : قیمت ها به تومان هست',
+            'message': 'سبد خرید کاربر : قیمت ها به تومان هست',
             'user': cart.user.username,
             'items': serializer.data,
             'total_price': total_price,
-        },status=status.HTTP_200_OK)
-
-
+            'discount_percent': discount_percent,
+            'discount_amount': discount_amount,
+            'amount_payable': amount_payable,
+        }, status=status.HTTP_200_OK)
 
 class CartProductItemRemoveAddView(APIView):
 

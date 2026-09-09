@@ -2,7 +2,9 @@ asgiref==3.12.1
 attrs==26.1.0
 boto3==1.43.89
 botocore==1.43.89
+certifi==2026.7.22
 cffi==2.1.1
+charset-normalizer==3.5.1
 cryptography==50.0.1
 Django==6.1.1
 django-filter==26.1
@@ -13,6 +15,7 @@ djangorestframework_simplejwt==5.5.1
 drf-spectacular==0.30.0
 drf-spectacular-sidecar==2026.9.1
 gunicorn==26.2.0
+idna==3.19
 inflection==0.5.1
 jmespath==1.1.0
 jsonschema==4.26.0
@@ -26,6 +29,7 @@ python-dotenv==1.2.3
 PyYAML==6.0.3
 redis==8.1.0
 referencing==0.37.0
+requests==2.34.2
 rpds-py==2026.6.3
 s3transfer==0.19.2
 six==1.17.0

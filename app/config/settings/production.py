@@ -90,6 +90,8 @@ STORAGES = {
     },
 }
 
+ZARINPAL_MERCHANT_ID = os.getenv("ZARINPAL_MERCHANT_ID")
+ZARINPAL_SANDBOX = os.getenv("ZARINPAL_SANDBOX", "True").lower() == "true"
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
