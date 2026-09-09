@@ -1,13 +1,11 @@
 from django.db import models
 from django.conf import settings
 
-from coupon.models import CouponModel
 from products.models import ProductModel
 
 
 class CartProductModel(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cart_user')
-    coupon = models.ForeignKey(CouponModel, on_delete=models.SET_NULL, related_name='coupon_cart', null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

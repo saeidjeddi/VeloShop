@@ -15,31 +15,17 @@ class CartProductItemView(APIView):
     serializer_class = CartProductItemSerializer
 
     def get(self, request):
-        cart, created  = CartProductModel.objects.select_related("user", "coupon").get_or_create(user=request.user)
+        cart, created  = CartProductModel.objects.select_related("user").get_or_create(user=request.user)
         items = list(cart.cart_items.select_related("product"))
         serializer = CartProductItemSerializer(items, many=True, context={'request': request})
-
-        coupon = cart.coupon
-
-        discount_percent = 0
-
-        if coupon and coupon.is_valid:
-            discount_percent = coupon.discount
-
         total_price = sum(item.product.price for item in items)
 
-        amount = (total_price * discount_percent // 100 )
-
-        amount_payable = total_price - amount
 
         return Response({
             'message' :'سبد خرید کاربر : قیمت ها به تومان هست',
             'user': cart.user.username,
             'items': serializer.data,
             'total_price': total_price,
-            'discount_percent' : discount_percent,
-            'amount': amount,
-            'amount_payable' : amount_payable
         },status=status.HTTP_200_OK)
 
 
