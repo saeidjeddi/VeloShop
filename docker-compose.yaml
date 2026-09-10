@@ -11,6 +11,12 @@ services:
     container_name: app
     restart: always
 
+    command:
+      - gunicorn
+      - config.wsgi:application
+      - --bind
+      - 0.0.0.0:8000
+
     expose:
       - "8000"
 
@@ -32,6 +38,9 @@ services:
       redis:
         condition: service_healthy
 
+      rabbitmq:
+        condition: service_healthy
+
 
   # ============================================================
   # NGINX
@@ -41,7 +50,7 @@ services:
     build:
       context: ./nginx
 
-    container_name: veloshop-nginx
+    container_name: nginx
     restart: always
 
     ports:
@@ -63,7 +72,7 @@ services:
   redis:
     image: redis:8.2
 
-    container_name: veloshop-redis
+    container_name: redis
     restart: always
 
     command:
@@ -115,9 +124,7 @@ services:
 
 
     healthcheck:
-      test: [
-        "CMD-SHELL", "pg_isready -U ${DB_NAME} -d ${DB_USER}"
-      ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -158,11 +165,115 @@ services:
 
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "pg_isready -h 127.0.0.1 -p 5432"
-        ]
+        ["CMD-SHELL","pg_isready -h 127.0.0.1 -p 5432 -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 10
       start_period: 10s
+
+
+  # ============================================================
+  # RABBITMQ
+  # ============================================================
+
+  rabbitmq:
+    image: rabbitmq:4.2.9-management
+
+    container_name: rabbitmq
+    restart: always
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+
+    volumes:
+      - ./volumes/rabbitmqdata:/var/lib/rabbitmq
+
+    ports:
+#      - "127.0.0.1:5672:5672"
+      - "127.0.0.1:15672:15672"
+
+    healthcheck:
+      test:
+        ["CMD","rabbitmq-diagnostics","-q","ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+ # ============================================================
+  # CELERY WORKER
+  # ============================================================
+
+  celery-worker:
+    build:
+      context: ./app
+
+    container_name: celery-worker
+    restart: always
+
+    command:
+      - celery
+      - -A
+      - config
+      - worker
+
+
+    environment:
+      SKIP_COLLECTSTATIC: "true"
+
+    volumes:
+      - ./app:/app
+      - ./volumes/media:/volumes/media
+      - ./volumes/assets:/volumes/assets
+
+    env_file:
+      - .env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      pgbouncer:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+      rabbitmq:
+        condition: service_healthy
+
+
+  # ============================================================
+  # CELERY BEAT
+  # ============================================================
+  celery-beat:
+    build:
+      context: ./app
+
+    container_name: celery-beat
+    restart: always
+
+    command:
+      - celery
+      - -A
+      - config
+      - beat
+      - --loglevel=INFO
+
+    environment:
+      SKIP_COLLECTSTATIC: "true"
+
+    volumes:
+      - ./app:/app
+      - ./volumes/celerybeat:/var/run/celery
+
+    env_file:
+      - .env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      rabbitmq:
+        condition: service_healthy

@@ -1,6 +1,7 @@
 import os
 from .rest_framework_conf import *
 from .cache_conf import *
+from .celery_conf import *
 
 from .db_conf import DATABASES
 from .meddleware_conf import MIDDLEWARE
